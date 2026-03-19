@@ -1,139 +1,27 @@
-# AvaliacaoEstrategiasToleranciaFalhas  
-em Middlewares MQTT para IoT
+# AvaliacaoEstrategiasToleranciaFalhas em Middlewares MQTT para IoT
 
-Este repositório contém a implementação experimental utilizada no artigo:
+Este repositório contém a implementação experimental utilizada no artigo “Avaliação de Estratégias de Tolerância a Falhas em Middlewares MQTT para IoT”, submetido à WTF 2026. O objetivo do trabalho é comparar o comportamento de três padrões de resiliência — Circuit Breaker, Replicação Ativa e Pipeline por Estágios — sob diferentes cenários de falha em sistemas baseados em MQTT.
 
-**“Avaliação de Estratégias de Tolerância a Falhas em Middlewares MQTT para IoT”**  
-(Submetido à WTF 2026)
+## Organização do Experimento
 
-O objetivo é comparar três padrões clássicos de resiliência aplicados a middlewares MQTT:
+O sistema simula um fluxo típico de aplicações IoT, no qual um produtor envia mensagens a um middleware que, por sua vez, interage com um backend. As falhas são injetadas no backend, permitindo avaliar a capacidade do middleware em lidar com instabilidade, indisponibilidade e degradação de desempenho no downstream.
 
-- Circuit Breaker  
-- Replicação Ativa  
-- Pipeline por Estágios  
+## Cenários de Falha
 
-A avaliação é realizada por meio de simulações controladas de falhas no backend (downstream), em um contexto típico de arquiteturas IoT Edge–Cloud.
+Os experimentos são conduzidos em três cenários: flapping, que representa instabilidade intermitente; outage, que representa indisponibilidade total do backend por um intervalo de tempo; e slow consumer, que representa degradação severa de desempenho com aumento de latência e ocorrência de timeouts.
 
----
+## Métricas Avaliadas
 
-## 📌 Visão Geral
+Durante a execução dos experimentos são coletadas métricas relacionadas à confiabilidade, desempenho e custo operacional. Entre elas estão taxa de perda, taxa de duplicação, latência média e no percentil 95, vazão em mensagens por segundo, uso de CPU, pico de memória, tempo total de execução, tempo de recuperação e divergência entre réplicas.
 
-O sistema simula o seguinte fluxo:
-> Sender (dispositivo IoT) → Middleware → Backend (simulado) → Receiver (métricas)
+## Estrutura do Código
 
+O arquivo sender.py é responsável pela execução dos experimentos e pela orquestração dos cenários de falha. O receiver.py realiza a coleta e o cálculo das métricas. Os arquivos middleware_cb.py, middleware_replica.py e middleware_pipeline.py implementam, respectivamente, os padrões Circuit Breaker, Replicação Ativa e Pipeline por Estágios. A pasta GerarResultadosFinais contém o script plot_results.py, utilizado para a geração dos gráficos a partir dos resultados em formato CSV.
 
-As falhas são injetadas **no backend**, representando cenários realistas onde o consumidor é instável, indisponível ou lento.
+## Execução
 
----
+Para executar os experimentos, deve-se rodar o script principal na raiz do projeto utilizando o comando “python sender.py”. Após a execução, será gerado um arquivo CSV contendo os resultados. Esse arquivo deve ser movido para a pasta GerarResultadosFinais, onde o script “python plot_results.py” pode ser executado para a geração dos gráficos comparativos.
 
-## ⚙️ Cenários de Falha
+## Considerações
 
-Os experimentos consideram três cenários:
-
-- **flapping** → instabilidade intermitente  
-- **outage** → indisponibilidade total  
-- **slow** → consumidor extremamente lento (timeout/backpressure)
-
----
-
-## 📊 Métricas Coletadas
-
-- Taxa de perda (`loss_rate`)
-- Taxa de duplicação (`dup_rate`)
-- Cópias extras por mensagem
-- Latência média e p95
-- Vazão (mensagens por segundo)
-- Uso de CPU (%)
-- Pico de memória (MB)
-- Tempo de execução
-- Tempo de recuperação (Circuit Breaker)
-- Divergência entre réplicas (Replicação Ativa)
-
-Os resultados são exportados em **CSV** e visualizados via gráficos.
-
----
-
-## 📁 Estrutura do Projeto
-├── sender.py # Orquestra os experimentos
-├── receiver.py # Coleta e calcula métricas
-├── middleware_cb.py # Circuit Breaker
-├── middleware_replica.py # Replicação Ativa
-├── middleware_pipeline.py # Pipeline por Estágios
-│
-└── GerarResultadosFinais/
-└── plot_results.py # Geração dos gráficos finais
-
-
----
-
-## 🧠 Descrição dos Componentes
-
-### `sender.py`
-- Script principal
-- Executa os experimentos
-- Injeta falhas via `BackendSimulator`
-- Mede CPU, memória e tempo
-- Gera CSV com resultados
-
-### `receiver.py`
-- Responsável por métricas end-to-end
-- Calcula:
-  - entrega
-  - perda
-  - duplicação
-  - latência
-  - divergência entre réplicas
-
-### `middleware_cb.py`
-- Implementa Circuit Breaker
-- Estados: `CLOSED`, `OPEN`, `HALF_OPEN`
-- Foco: **fail-fast e contenção**
-
-### `middleware_replica.py`
-- Replicação ativa (N réplicas)
-- Envio paralelo
-- Foco: **alta disponibilidade**
-- Custo: duplicação e CPU
-
-### `middleware_pipeline.py`
-- Pipeline com:
-  - estágios
-  - fila
-  - retries com backoff
-- Foco: **resiliência temporal**
-
-### `plot_results.py`
-- Lê os CSVs gerados
-- Gera gráficos comparativos:
-  - perda vs duplicação
-  - vazão vs latência
-  - CPU vs memória
-
----
-
-## ▶️ Como Executar
-
-### 1. Rodar os experimentos
-
-Na raiz do projeto:
-
-> python sender.py
-
-Selecione:
-
-1 - Rodar tudo
-
-Isso irá:
-
-Executar todos os cenários  
-
-Testar todos os middlewares  
-
-Gerar um arquivo .csv com timestamp  
-
-Mova os CSVs para a pasta GerarResultadosFinais  
-
-E depois na pasta GerarResultadosFinais: 
-
-> python plot_results.py
-
+Os experimentos são realizados em ambiente controlado, com parâmetros fixos e injeção programática de falhas, garantindo reprodutibilidade. A avaliação concentra-se no comportamento do middleware no trecho entre middleware e backend, não contemplando falhas no produtor ou na rede upstream.
