@@ -1,6 +1,8 @@
 # AvaliacaoEstrategiasToleranciaFalhas
 em Middlewares MQTT para IoT
 
+Este repositório faz parte do artigo submetido à WTF 2026 
+
 ## Para rodar
 > python sender.py  
 - Selecione a opção para rodar todas as 10 execuções  
