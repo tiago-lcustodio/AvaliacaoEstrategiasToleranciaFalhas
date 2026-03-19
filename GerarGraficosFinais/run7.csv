@@ -1,0 +1,10 @@
+Scenario,Middleware,Total,Delivered,LossRate,DupRate,ExtraCopiesPerMsg,LatencyMeanMs,LatencyP95Ms,ThroughputMsgS,CPUPercent,MemPeakMB,DurationS,RecoveryMeanS,ReplicaDivergenceRate
+flapping,Circuit Breaker,200,166,0.1700,0.0000,0.0000,7.282,8.950,47.638,0.86,53.69,3.485,,
+flapping,Replicação Ativa,200,199,0.0050,0.9050,1.3850,8.745,16.259,31.315,1.10,53.69,6.355,,0.5176
+flapping,Pipeline por Estágios,200,200,0.0000,0.0000,0.0000,485.097,3175.114,47.335,1.18,53.69,4.225,,
+outage,Circuit Breaker,200,116,0.4200,0.0000,0.0000,7.216,8.971,39.832,1.03,53.69,2.912,,
+outage,Replicação Ativa,200,135,0.3250,0.6750,1.3450,7.250,9.103,21.201,1.10,53.69,6.368,,0.0074
+outage,Pipeline por Estágios,200,200,0.0000,0.0000,0.0000,8.318,10.056,54.049,1.08,53.69,3.700,,
+slow,Circuit Breaker,200,115,0.4250,0.0000,0.0000,7.252,9.018,32.497,1.13,53.69,3.539,,
+slow,Replicação Ativa,200,0,1.0000,0.0000,0.0000,0.000,0.000,0.000,0.10,53.69,80.302,,0.0000
+slow,Pipeline por Estágios,200,0,1.0000,0.0000,0.0000,0.000,0.000,0.000,0.19,53.69,31.376,,
