@@ -131,6 +131,8 @@ Testar todos os middlewares
 
 Gerar um arquivo .csv com timestamp  
 
+Mova os CSVs para a pasta GerarResultadosFinais  
+
 E depois na pasta GerarResultadosFinais: 
 
 > python plot_results.py
