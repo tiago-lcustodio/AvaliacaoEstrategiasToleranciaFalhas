@@ -406,7 +406,7 @@ def run_all():
 
 
 def main():
-    print("=== Experimentos de Tolerância a Falhas (DO ZERO, sem MQTT) ===")
+    print("=== Experimentos de Tolerância a Falhas ===")
     print("1 - Rodar tudo (3 cenários × 3 middlewares) => CSV + até 9 gráficos")
     op = input("Opção: ").strip()
     if op == "1":
